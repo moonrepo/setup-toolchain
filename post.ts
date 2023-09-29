@@ -4,6 +4,16 @@ import * as cache from '@actions/cache';
 import * as core from '@actions/core';
 import { getPluginsDir, getToolchainCacheKey, getToolsDir } from './helpers';
 
+async function cleanToolchain() {
+	try {
+		core.info(`Cleaning toolchain of stale items before caching`);
+
+		await execa('proto', ['clean', '--yes']);
+	} catch (error: unknown) {
+		core.warning(error as Error);
+	}
+}
+
 async function saveCache() {
 	if (!cache.isFeatureAvailable()) {
 		return;
@@ -17,14 +27,6 @@ async function saveCache() {
 	}
 
 	try {
-		core.info(`Cleaning toolchain of stale items before caching`);
-
-		await execa('proto', ['clean', '--yes']);
-	} catch (error: unknown) {
-		core.warning(error as Error);
-	}
-
-	try {
 		const primaryKey = await getToolchainCacheKey();
 		const cacheHitKey = core.getState('cacheHitKey');
 
@@ -32,6 +34,8 @@ async function saveCache() {
 			core.info(`Cache hit occured on the key ${cacheHitKey}, not saving cache`);
 			return;
 		}
+
+		await cleanToolchain();
 
 		core.info(`Saving cache with key ${primaryKey}`);
 
