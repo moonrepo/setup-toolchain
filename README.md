@@ -1,13 +1,13 @@
-# moon - Setup moon and toolchain
+# Setup proto and moon toolchains
 
-A GitHub action that sets up an environment for moon by...
+A GitHub action that sets up an environment for proto and moon.
 
-Installing the `moon` binary globally using the
-[official installation script](https://moonrepo.dev/docs/install), and appending the installation
-directory to `PATH`.
-
-And also caching the moon toolchain at `~/.moon` (or `~/.proto`), keyed by hashing the
-`.moon/toolchain.yml` configuration file found in the repository.
+- Installs `proto` globally so that installed tools can also be executed globally.
+- Conditionally installs `moon` globally if the repository is using moon (attempts to detect a
+  `.moon` directory).
+- Caches the toolchain (`~/.proto`) so subsequent runs are faster.
+- Hashes `.prototools` and `.moon/toolchain.yml` files to generate a unique cache key.
+- Cleans the toolchain before caching to remove unused or stale tools.
 
 ## Installation
 
@@ -18,13 +18,18 @@ jobs:
     name: CI
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: moonrepo/setup-moon-action@v1
+      - uses: moonrepo/setup-toolchain@v0
+      - run: proto use
       - run: moon ci
 ```
 
 ## Inputs
 
-- `version` - Version of moon to explicitly install. Defaults to "latest".
+- `moon-version` - Version of moon to explicitly install (if repository is using moon). Defaults to
+  "latest".
+- `proto-version` - Version of proto to explicitly install. Defaults to "latest".
+- `workspace-root` - Relative path to moon's workspace root if initialized in a sub-directory.
+  Defaults to "".
