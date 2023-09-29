@@ -27,5 +27,5 @@ runs:
   main: 'dist/index.js'
   post: 'dist/post/index.js'
 branding:
-  icon: 'tool'
+  icon: 'battery-charging'
   color: 'purple'
