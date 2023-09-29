@@ -1,0 +1,24 @@
+name: 'Setup proto and moon toolchains'
+author: 'Miles Johnson'
+description: 'Installs proto and moon globally when required, and caches the toolchain.'
+inputs:
+  moon-version:
+    default: 'latest'
+    description: 'Version of moon to install (if repository is using moon).'
+    required: false
+  proto-version:
+    default: 'latest'
+    description: 'Version of proto to install.'
+    required: false
+outputs:
+  cache-key:
+    description: 'The cache key used for the toolchain folder (~/.proto).'
+  cache-hit:
+    description: 'A boolean to indicate an exact match was found for the cache key.'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
+  post: 'dist/post/index.js'
+branding:
+  icon: 'battery-charging'
+  color: 'purple'
