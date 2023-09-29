@@ -28,6 +28,7 @@ jobs:
 
 ## Inputs
 
+- `auto-install` - Auto-install tools if a `.prototools` file exists in the repository root.
 - `moon-version` - Version of moon to explicitly install (if repository is using moon). Defaults to
   "latest".
 - `proto-version` - Version of proto to explicitly install. Defaults to "latest".

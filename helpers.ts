@@ -48,10 +48,10 @@ export async function getToolchainCacheKey() {
 	return `moonrepo-toolchain-${process.platform}-${toolchainHash}`;
 }
 
-export async function installBin(bin: string, versionInput: string) {
+export async function installBin(bin: string) {
 	core.info(`Installing \`${bin}\` globally`);
 
-	const version = core.getInput(versionInput) || 'latest';
+	const version = core.getInput(`${bin}-version`) || 'latest';
 	const binPath = path.join(getBinDir(), WINDOWS ? `${bin}.exe` : bin);
 
 	if (version !== 'latest' && fs.existsSync(binPath)) {

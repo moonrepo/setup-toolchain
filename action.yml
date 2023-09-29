@@ -2,6 +2,9 @@ name: 'Setup proto and moon toolchains'
 author: 'Miles Johnson'
 description: 'Installs proto and moon globally when required, and caches the toolchain.'
 inputs:
+  auto-install:
+    default: false
+    description: 'Auto-install tools if a .prototools file exists.'
   moon-version:
     default: 'latest'
     description: 'Version of moon to install (if repository is using moon).'
