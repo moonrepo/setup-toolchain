@@ -4,7 +4,7 @@ description: 'Installs proto and moon globally when required, and caches the too
 inputs:
   auto-install:
     default: false
-    description: 'Auto-install tools if a .prototools file exists.'
+    description: 'Auto-install tools on setup.'
   moon-version:
     default: 'latest'
     description: 'Version of moon to install (if repository is using moon).'

@@ -1,5 +1,3 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import execa from 'execa';
 import * as cache from '@actions/cache';
 import * as core from '@actions/core';
@@ -8,7 +6,6 @@ import {
 	getPluginsDir,
 	getToolchainCacheKey,
 	getToolsDir,
-	getWorkingDir,
 	installBin,
 	isUsingMoon,
 } from './helpers';
@@ -42,22 +39,23 @@ async function restoreCache() {
 
 async function run() {
 	try {
-		core.addPath(getBinDir());
+		const binDir = getBinDir();
+
+		core.info(`Added ${binDir} to PATH`);
+		core.addPath(binDir);
 
 		await restoreCache();
+
 		await installBin('proto');
 
 		if (isUsingMoon()) {
 			await installBin('moon');
 		}
 
-		if (
-			core.getBooleanInput('auto-install') &&
-			fs.existsSync(path.join(getWorkingDir(), '.prototools'))
-		) {
-			core.info('Attempting to restore cached toolchain');
+		if (core.getBooleanInput('auto-install')) {
+			core.info('Auto-installing tools');
 
-			await execa('proto', ['use']);
+			await execa('proto', ['use'], { stdio: 'inherit' });
 		}
 	} catch (error: unknown) {
 		core.setFailed(error as Error);
