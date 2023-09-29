@@ -22,13 +22,14 @@ jobs:
         with:
           fetch-depth: 0
       - uses: moonrepo/setup-toolchain@v0
-      - run: proto use
+        with:
+          auto-install: true
       - run: moon ci
 ```
 
 ## Inputs
 
-- `auto-install` - Auto-install tools if a `.prototools` file exists in the repository root.
+- `auto-install` - Auto-install tools on setup. Defaults to `false`.
 - `moon-version` - Version of moon to explicitly install (if repository is using moon). Defaults to
   "latest".
 - `proto-version` - Version of proto to explicitly install. Defaults to "latest".
