@@ -52,13 +52,6 @@ export async function installBin(bin: string) {
 	core.info(`Installing \`${bin}\` globally`);
 
 	const version = core.getInput(`${bin}-version`) || 'latest';
-	const binPath = path.join(getBinDir(), WINDOWS ? `${bin}.exe` : bin);
-
-	if (version !== 'latest' && fs.existsSync(binPath)) {
-		core.info('Binary already exists, skipping installation');
-
-		return;
-	}
 
 	const scriptName = WINDOWS ? `${bin}.ps1` : `${bin}.sh`;
 	const scriptPath = path.join(getProtoHome(), 'temp', scriptName);
@@ -68,14 +61,26 @@ export async function installBin(bin: string) {
 		fs.unlinkSync(scriptPath);
 	}
 
-	const script = await tc.downloadTool(`https://moonrepo.dev/install/${scriptName}`, scriptPath);
-	const args = version === 'latest' ? [] : [version];
+	core.info('Downloading installation script');
 
-	core.info(`Downloaded installation script to ${script}`);
+	const script = await tc.downloadTool(`https://moonrepo.dev/install/${scriptName}`, scriptPath);
 
 	// eslint-disable-next-line no-magic-numbers
 	await fs.promises.chmod(script, 0o755);
-	await execa(script, args);
+
+	core.info(`Downloaded script to ${script}`);
+
+	core.info('Executing installation script');
+
+	const binDir = getBinDir();
+	const binPath = path.join(binDir, WINDOWS ? `${bin}.exe` : bin);
+
+	await execa(script, version === 'latest' ? [] : [version], {
+		env: {
+			[`${bin.toUpperCase()}_INSTALL_DIR`]: binDir,
+		},
+		stdio: core.isDebug() || !!process.env[`${bin.toUpperCase()}_DEBUG`] ? 'inherit' : 'pipe',
+	});
 
 	core.info(`Installed binary to ${binPath}`);
 }
