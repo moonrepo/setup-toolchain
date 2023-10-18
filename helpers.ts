@@ -83,4 +83,12 @@ export async function installBin(bin: string) {
 	});
 
 	core.info(`Installed binary to ${binPath}`);
+
+	core.info('Checking version');
+
+	try {
+		await execa(binPath, ['--version']);
+	} catch (error) {
+		core.error(String(error));
+	}
 }
