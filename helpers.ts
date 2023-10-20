@@ -13,6 +13,10 @@ export function getProtoHome() {
 		return process.env.PROTO_HOME;
 	}
 
+	if (process.env.PROTO_ROOT) {
+		return process.env.PROTO_ROOT;
+	}
+
 	return path.join(os.homedir(), '.proto');
 }
 
@@ -22,6 +26,10 @@ export function getBinDir() {
 
 export function getPluginsDir() {
 	return path.join(getProtoHome(), 'plugins');
+}
+
+export function getShimsDir() {
+	return path.join(getProtoHome(), 'shims');
 }
 
 export function getToolsDir() {

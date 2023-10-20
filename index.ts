@@ -4,6 +4,7 @@ import * as core from '@actions/core';
 import {
 	getBinDir,
 	getPluginsDir,
+	getShimsDir,
 	getToolchainCacheKey,
 	getToolsDir,
 	installBin,
@@ -39,10 +40,12 @@ async function restoreCache() {
 
 async function run() {
 	try {
+		const shimsDir = getShimsDir();
 		const binDir = getBinDir();
 
-		core.info(`Added ${binDir} to PATH`);
+		core.info(`Added ${shimsDir} and ${binDir} to PATH`);
 		core.addPath(binDir);
+		core.addPath(shimsDir);
 
 		await restoreCache();
 

@@ -1,6 +1,6 @@
 {
   "name": "@moonrepo/setup-toolchain",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A GitHub action to setup and cache the proto and moon toolchains. ",
   "main": "dist/index.js",
   "scripts": {
