@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.7.1",
-    "@vercel/ncc": "^0.38.0",
+    "@vercel/ncc": "^0.38.1",
     "eslint": "^8.50.0",
     "eslint-config-moon": "^2.0.10",
     "prettier": "^3.0.3",

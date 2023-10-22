@@ -53,7 +53,7 @@ export async function getToolchainCacheKey() {
 
 	const toolchainHash = await glob.hashFiles(files.join('\n'));
 
-	return `moonrepo-toolchain-${process.platform}-${toolchainHash}`;
+	return `moonrepo-toolchain-v1-${process.platform}-${toolchainHash}`;
 }
 
 export async function installBin(bin: string) {
