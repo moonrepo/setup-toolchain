@@ -95,7 +95,7 @@ export async function installBin(bin: string) {
 	core.info('Checking version');
 
 	try {
-		await execa(binPath, ['--version']);
+		await execa(binPath, ['--version'], { stdio: 'inherit' });
 	} catch (error) {
 		core.error(String(error));
 	}
