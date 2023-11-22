@@ -44,16 +44,26 @@ export function isUsingMoon() {
 	return fs.existsSync(path.join(getWorkingDir(), core.getInput('workspace-root'), '.moon'));
 }
 
+export function getCacheKeyPrefix() {
+	return 'moonrepo-toolchain-v1';
+}
+
 export async function getToolchainCacheKey() {
-	const files = ['**/.prototools'];
+	const files = ['.prototools'];
 
 	if (isUsingMoon()) {
-		files.push(path.join(core.getInput('workspace-root'), '.moon/toolchain.yml'));
+		const root = core.getInput('workspace-root');
+
+		if (root) {
+			files.push(path.join(root, '.prototools'), path.join(root, '.moon/toolchain.yml'));
+		} else {
+			files.push('.moon/toolchain.yml');
+		}
 	}
 
 	const toolchainHash = await glob.hashFiles(files.join('\n'));
 
-	return `moonrepo-toolchain-v1-${process.platform}-${toolchainHash}`;
+	return `${getCacheKeyPrefix()}-${process.platform}-${toolchainHash}`;
 }
 
 export async function installBin(bin: string) {

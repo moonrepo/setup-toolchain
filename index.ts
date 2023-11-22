@@ -3,6 +3,7 @@ import * as cache from '@actions/cache';
 import * as core from '@actions/core';
 import {
 	getBinDir,
+	getCacheKeyPrefix,
 	getPluginsDir,
 	getShimsDir,
 	getToolchainCacheKey,
@@ -19,10 +20,11 @@ async function restoreCache() {
 	core.info('Attempting to restore cached toolchain');
 
 	const primaryKey = await getToolchainCacheKey();
+	const cachePrefix = getCacheKeyPrefix();
 	const cacheKey = await cache.restoreCache(
 		[getPluginsDir(), getToolsDir()],
 		primaryKey,
-		[`moonrepo-toolchain-${process.platform}`, 'moonrepo-toolchain'],
+		[`${cachePrefix}-${process.platform}`, cachePrefix],
 		{},
 		false,
 	);
