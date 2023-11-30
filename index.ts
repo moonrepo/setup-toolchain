@@ -9,11 +9,12 @@ import {
 	getToolchainCacheKey,
 	getToolsDir,
 	installBin,
+	isCacheEnabled,
 	isUsingMoon,
 } from './helpers';
 
 async function restoreCache() {
-	if (!cache.isFeatureAvailable()) {
+	if (!isCacheEnabled()) {
 		return;
 	}
 

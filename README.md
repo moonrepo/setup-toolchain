@@ -30,6 +30,9 @@ jobs:
 ## Inputs
 
 - `auto-install` - Auto-install tools on setup. Defaults to `false`.
+- `cache` - Toggle caching of the toolchain directory. Defaults to `true`.
+- `cache-base` - Base branch/ref to save a warmup cache on. Other branches/refs will restore from
+  this base.
 - `moon-version` - Version of moon to explicitly install (if repository is using moon). Defaults to
   "latest".
 - `proto-version` - Version of proto to explicitly install. Defaults to "latest".

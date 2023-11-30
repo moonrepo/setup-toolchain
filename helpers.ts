@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import execa from 'execa';
+import * as cache from '@actions/cache';
 import * as core from '@actions/core';
 import * as glob from '@actions/glob';
 import * as tc from '@actions/tool-cache';
@@ -38,6 +39,10 @@ export function getToolsDir() {
 
 export function getWorkingDir() {
 	return process.env.GITHUB_WORKSPACE ?? process.cwd();
+}
+
+export function isCacheEnabled(): boolean {
+	return core.getBooleanInput('cache') && cache.isFeatureAvailable();
 }
 
 export function isUsingMoon() {
