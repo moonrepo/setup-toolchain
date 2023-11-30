@@ -6,7 +6,7 @@ inputs:
     default: false
     description: 'Auto-install tools on setup.'
   cache:
-    description: 'Toggle caching of the proto toolchain.'
+    description: 'Toggle caching of the toolchain directory.'
     default: true
   cache-base:
     description:
