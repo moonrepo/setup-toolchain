@@ -5,6 +5,12 @@ inputs:
   auto-install:
     default: false
     description: 'Auto-install tools on setup.'
+  cache:
+    description: 'Toggle caching of the proto toolchain.'
+    default: true
+  cache-base:
+    description:
+      'Base branch/ref to save a warmup cache on. Other branches/refs will restore from this base.'
   moon-version:
     default: 'latest'
     description: 'Version of moon to install (if repository is using moon).'

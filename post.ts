@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import execa from 'execa';
 import * as cache from '@actions/cache';
 import * as core from '@actions/core';
-import { getPluginsDir, getToolchainCacheKey, getToolsDir } from './helpers';
+import { getPluginsDir, getToolchainCacheKey, getToolsDir, isCacheEnabled } from './helpers';
 
 async function cleanToolchain() {
 	try {
@@ -14,8 +14,17 @@ async function cleanToolchain() {
 	}
 }
 
+function shouldSaveCache() {
+	const base = core.getInput('cache-base');
+
+	// Only save the cache for the following 2 scenarios:
+	//	- If not using the base warmup strategy.
+	//	- If using the base warmup strategy, and the current ref matches.
+	return !base || !!(base && !!(process.env.GITHUB_REF_NAME ?? '').match(base));
+}
+
 async function saveCache() {
-	if (!cache.isFeatureAvailable()) {
+	if (!isCacheEnabled() || !shouldSaveCache()) {
 		return;
 	}
 
