@@ -1,3 +1,7 @@
+# 0.2.1
+
+- Support proto v0.24 changes.
+
 # 0.2.0
 
 - Added a `cache` input to toggle caching of the toolchain. Defaults to true.

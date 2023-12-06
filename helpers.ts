@@ -50,7 +50,8 @@ export function isUsingMoon() {
 }
 
 export function getCacheKeyPrefix() {
-	return 'moonrepo-toolchain-v1';
+	// v1 - Before proto v0.24 changes
+	return 'moonrepo-toolchain-v2';
 }
 
 export async function getToolchainCacheKey() {
