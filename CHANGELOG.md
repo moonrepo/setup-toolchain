@@ -1,3 +1,8 @@
+# 0.3.0
+
+- Now includes the moon and proto versions in the cache key.
+- Updated dependencies.
+
 # 0.2.1
 
 - Support proto v0.24 changes.
