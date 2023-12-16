@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -41,12 +42,18 @@ export function getWorkingDir() {
 	return process.env.GITHUB_WORKSPACE ?? process.cwd();
 }
 
-export function isCacheEnabled(): boolean {
+export function isCacheEnabled() {
 	return core.getBooleanInput('cache') && cache.isFeatureAvailable();
 }
 
 export function isUsingMoon() {
 	return fs.existsSync(path.join(getWorkingDir(), core.getInput('workspace-root'), '.moon'));
+}
+
+export function extractMajorMinor(version: string) {
+	const [major, minor] = version.split('.');
+
+	return `${major}.${minor}`;
 }
 
 export function getCacheKeyPrefix() {
@@ -55,6 +62,7 @@ export function getCacheKeyPrefix() {
 }
 
 export async function getToolchainCacheKey() {
+	const hasher = crypto.createHash('sha1');
 	const files = ['.prototools'];
 
 	if (isUsingMoon()) {
@@ -67,9 +75,27 @@ export async function getToolchainCacheKey() {
 		}
 	}
 
-	const toolchainHash = await glob.hashFiles(files.join('\n'));
+	core.debug(`Hashing files: ${files.join(', ')}`);
 
-	return `${getCacheKeyPrefix()}-${process.platform}-${toolchainHash}`;
+	hasher.update(await glob.hashFiles(files.join('\n')));
+
+	const protoVersion = process.env.PROTO_CLI_VERSION;
+
+	if (protoVersion) {
+		core.debug(`Hashing proto version: ${protoVersion}`);
+
+		hasher.update(extractMajorMinor(protoVersion));
+	}
+
+	const moonVersion = process.env.MOON_CLI_VERSION;
+
+	if (moonVersion) {
+		core.debug(`Hashing moon version: ${moonVersion}`);
+
+		hasher.update(extractMajorMinor(moonVersion));
+	}
+
+	return `${getCacheKeyPrefix()}-${process.platform}-${hasher.digest('hex')}`;
 }
 
 export async function installBin(bin: string) {
@@ -98,12 +124,13 @@ export async function installBin(bin: string) {
 
 	const binDir = getBinDir();
 	const binPath = path.join(binDir, WINDOWS ? `${bin}.exe` : bin);
+	const envPrefix = bin.toUpperCase();
 
 	await execa(script, version === 'latest' ? [] : [version], {
 		env: {
-			[`${bin.toUpperCase()}_INSTALL_DIR`]: binDir,
+			[`${envPrefix}_INSTALL_DIR`]: binDir,
 		},
-		stdio: core.isDebug() || !!process.env[`${bin.toUpperCase()}_DEBUG`] ? 'inherit' : 'pipe',
+		stdio: core.isDebug() || !!process.env[`${envPrefix}_DEBUG`] ? 'inherit' : 'pipe',
 	});
 
 	core.info(`Installed binary to ${binPath}`);
@@ -111,7 +138,14 @@ export async function installBin(bin: string) {
 	core.info('Checking version');
 
 	try {
-		await execa(binPath, ['--version'], { stdio: 'inherit' });
+		const result = await execa(binPath, ['--version'], { stdio: 'pipe' });
+
+		if (result.stdout) {
+			// eslint-disable-next-line require-atomic-updates
+			process.env[`${envPrefix}_CLI_VERSION`] = result.stdout.replace(bin, '').trim();
+
+			core.info(result.stdout);
+		}
 	} catch (error) {
 		core.error(String(error));
 	}
