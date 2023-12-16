@@ -38,6 +38,10 @@ export function getToolsDir() {
 	return path.join(getProtoHome(), 'tools');
 }
 
+export function getUidFile() {
+	return path.join(getProtoHome(), 'id');
+}
+
 export function getWorkingDir() {
 	return process.env.GITHUB_WORKSPACE ?? process.cwd();
 }
