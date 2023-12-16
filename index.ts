@@ -8,6 +8,7 @@ import {
 	getShimsDir,
 	getToolchainCacheKey,
 	getToolsDir,
+	getUidFile,
 	installBin,
 	isCacheEnabled,
 	isUsingMoon,
@@ -22,12 +23,11 @@ async function restoreCache() {
 
 	const primaryKey = await getToolchainCacheKey();
 	const cachePrefix = getCacheKeyPrefix();
+
 	const cacheKey = await cache.restoreCache(
-		[getPluginsDir(), getToolsDir()],
+		[getPluginsDir(), getToolsDir(), getUidFile()],
 		primaryKey,
 		[`${cachePrefix}-${process.platform}`, cachePrefix],
-		{},
-		false,
 	);
 
 	if (cacheKey) {
@@ -50,13 +50,13 @@ async function run() {
 		core.addPath(binDir);
 		core.addPath(shimsDir);
 
-		await restoreCache();
-
 		await installBin('proto');
 
 		if (isUsingMoon()) {
 			await installBin('moon');
 		}
+
+		await restoreCache();
 
 		if (core.getBooleanInput('auto-install')) {
 			core.info('Auto-installing tools');

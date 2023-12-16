@@ -2,7 +2,13 @@ import fs from 'node:fs';
 import execa from 'execa';
 import * as cache from '@actions/cache';
 import * as core from '@actions/core';
-import { getPluginsDir, getToolchainCacheKey, getToolsDir, isCacheEnabled } from './helpers';
+import {
+	getPluginsDir,
+	getToolchainCacheKey,
+	getToolsDir,
+	getUidFile,
+	isCacheEnabled,
+} from './helpers';
 
 async function cleanToolchain() {
 	try {
@@ -48,7 +54,7 @@ async function saveCache() {
 
 		core.info(`Saving cache with key ${primaryKey}`);
 
-		await cache.saveCache([getPluginsDir(), toolsDir], primaryKey, {}, false);
+		await cache.saveCache([getPluginsDir(), toolsDir, getUidFile()], primaryKey);
 	} catch (error: unknown) {
 		core.setFailed(error as Error);
 	}
