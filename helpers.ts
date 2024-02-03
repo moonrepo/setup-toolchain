@@ -51,7 +51,10 @@ export function isCacheEnabled() {
 }
 
 export function isUsingMoon() {
-	return fs.existsSync(path.join(getWorkingDir(), core.getInput('workspace-root'), '.moon'));
+	return (
+		!!core.getInput('moon-version') ||
+		fs.existsSync(path.join(getWorkingDir(), core.getInput('workspace-root'), '.moon'))
+	);
 }
 
 export function extractMajorMinor(version: string) {

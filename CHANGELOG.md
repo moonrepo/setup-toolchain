@@ -1,3 +1,7 @@
+# 0.3.1
+
+- moon can be forced installed by setting `moon-version`, instead of relying on file detection.
+
 # 0.3.0
 
 - Now includes the moon and proto versions in the cache key.

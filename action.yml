@@ -12,11 +12,11 @@ inputs:
     description:
       'Base branch/ref to save a warmup cache on. Other branches/refs will restore from this base.'
   moon-version:
-    default: 'latest'
-    description: 'Version of moon to install (if repository is using moon).'
+    default: ''
+    description: 'Version of moon to install.'
     required: false
   proto-version:
-    default: 'latest'
+    default: ''
     description: 'Version of proto to install.'
     required: false
   workspace-root:
