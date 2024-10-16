@@ -1,3 +1,7 @@
+# 0.3.2
+
+- Auto-install will now run in the `workspace-root` if defined.
+
 # 0.3.1
 
 - moon can be forced installed by setting `moon-version`, instead of relying on file detection.

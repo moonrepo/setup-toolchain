@@ -9,6 +9,7 @@ import {
 	getToolchainCacheKey,
 	getToolsDir,
 	getUidFile,
+	getWorkspaceRoot,
 	installBin,
 	isCacheEnabled,
 	isUsingMoon,
@@ -61,7 +62,7 @@ async function run() {
 		if (core.getBooleanInput('auto-install')) {
 			core.info('Auto-installing tools');
 
-			await execa('proto', ['use'], { stdio: 'inherit' });
+			await execa('proto', ['use'], { cwd: getWorkspaceRoot(), stdio: 'inherit' });
 		}
 	} catch (error: unknown) {
 		core.setFailed(error as Error);

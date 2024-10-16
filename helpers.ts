@@ -46,6 +46,10 @@ export function getWorkingDir() {
 	return process.env.GITHUB_WORKSPACE ?? process.cwd();
 }
 
+export function getWorkspaceRoot() {
+	return path.join(getWorkingDir(), core.getInput('workspace-root'));
+}
+
 export function isCacheEnabled() {
 	return core.getBooleanInput('cache') && cache.isFeatureAvailable();
 }
@@ -53,7 +57,7 @@ export function isCacheEnabled() {
 export function isUsingMoon() {
 	return (
 		!!core.getInput('moon-version') ||
-		fs.existsSync(path.join(getWorkingDir(), core.getInput('workspace-root'), '.moon'))
+		fs.existsSync(path.join(getWorkspaceRoot(), '.moon'))
 	);
 }
 
