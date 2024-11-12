@@ -55,10 +55,35 @@ export function isCacheEnabled() {
 }
 
 export function isUsingMoon() {
-	return (
-		!!core.getInput('moon-version') ||
-		fs.existsSync(path.join(getWorkspaceRoot(), '.moon'))
-	);
+	return !!core.getInput('moon-version') || fs.existsSync(path.join(getWorkspaceRoot(), '.moon'));
+}
+
+export function shouldInstallMoon() {
+	// Not installing with proto, so need to install with the action
+	if (!core.getBooleanInput('auto-install')) {
+		return true;
+	}
+
+	const prototools = path.join(getWorkspaceRoot(), '.prototools');
+
+	if (fs.existsSync(prototools)) {
+		const lines = fs.readFileSync(prototools, 'utf8').split('\n');
+
+		for (const line of lines) {
+			// If we encountered a table, then we are out of the versions mapping
+			if (line.startsWith('[')) {
+				break;
+			}
+
+			// If we find a `moon = "1.2.3"` version string, then we shouldn't install
+			// moon with the action, and instead install through proto
+			if (line.match(/^moon(\s*)=(\s*)('|")/)) {
+				return false;
+			}
+		}
+	}
+
+	return true;
 }
 
 export function extractMajorMinor(version: string) {

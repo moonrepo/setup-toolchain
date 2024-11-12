@@ -1,3 +1,8 @@
+# 0.3.3
+
+- If `moon` is configured in a root `.prototools`, we'll no longer install the moon binary through
+  the action, and rely on proto to install it. This only applies if `auto-install` is true.
+
 # 0.3.2
 
 - Auto-install will now run in the `workspace-root` if defined.

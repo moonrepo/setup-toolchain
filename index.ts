@@ -13,6 +13,7 @@ import {
 	installBin,
 	isCacheEnabled,
 	isUsingMoon,
+	shouldInstallMoon,
 } from './helpers';
 
 async function restoreCache() {
@@ -53,7 +54,7 @@ async function run() {
 
 		await installBin('proto');
 
-		if (isUsingMoon()) {
+		if (isUsingMoon() && shouldInstallMoon()) {
 			await installBin('moon');
 		}
 
