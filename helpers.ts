@@ -59,6 +59,11 @@ export function isUsingMoon() {
 }
 
 export function shouldInstallMoon() {
+	// Not installing with proto, so need to install with the action
+	if (!core.getBooleanInput('auto-install')) {
+		return true;
+	}
+
 	const prototools = path.join(getWorkspaceRoot(), '.prototools');
 
 	if (fs.existsSync(prototools)) {

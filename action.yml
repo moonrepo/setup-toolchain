@@ -3,11 +3,11 @@ author: 'Miles Johnson'
 description: 'Installs proto and moon globally when required, and caches the toolchain.'
 inputs:
   auto-install:
-    default: false
+    default: 'false'
     description: 'Auto-install tools on setup.'
   cache:
     description: 'Toggle caching of the toolchain directory.'
-    default: true
+    default: 'true'
   cache-base:
     description:
       'Base branch/ref to save a warmup cache on. Other branches/refs will restore from this base.'
