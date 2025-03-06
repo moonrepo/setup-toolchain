@@ -131,6 +131,14 @@ export async function getToolchainCacheKey() {
 		hasher.update(extractMajorMinor(moonVersion));
 	}
 
+	const configVersion = core.getInput('cache-version');
+
+	if (configVersion) {
+		core.debug(`Hashing configured version: ${configVersion}`);
+
+		hasher.update(configVersion);
+	}
+
 	return `${getCacheKeyPrefix()}-${process.platform}-${hasher.digest('hex')}`;
 }
 

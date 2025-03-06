@@ -1,5 +1,6 @@
 # 0.4.0
 
+- Added a `cache-version` input that will be used in the cache key.
 - Updated dependencies.
 
 # 0.3.3
