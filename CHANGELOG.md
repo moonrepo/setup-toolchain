@@ -1,3 +1,8 @@
+# 0.4.0
+
+- Added a `cache-version` input that will be used in the cache key.
+- Updated dependencies.
+
 # 0.3.3
 
 - If `moon` is configured in a root `.prototools`, we'll no longer install the moon binary through
