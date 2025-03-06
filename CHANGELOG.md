@@ -1,3 +1,7 @@
+# 0.4.0
+
+- Updated dependencies.
+
 # 0.3.3
 
 - If `moon` is configured in a root `.prototools`, we'll no longer install the moon binary through
