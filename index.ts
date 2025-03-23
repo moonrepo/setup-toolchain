@@ -29,7 +29,7 @@ async function restoreCache() {
 	const cacheKey = await cache.restoreCache(
 		[getPluginsDir(), getToolsDir(), getUidFile()],
 		primaryKey,
-		[`${cachePrefix}-${process.platform}-${process.arch}`, cachePrefix],
+		[`${cachePrefix}-${process.platform}-${process.arch}`],
 	);
 
 	if (cacheKey) {
