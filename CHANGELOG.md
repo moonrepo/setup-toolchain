@@ -1,3 +1,7 @@
+# 0.4.1
+
+- Include the architecture in the cache key.
+
 # 0.4.0
 
 - Added a `cache-version` input that will be used in the cache key.
