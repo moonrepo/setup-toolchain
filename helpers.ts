@@ -139,7 +139,7 @@ export async function getToolchainCacheKey() {
 		hasher.update(configVersion);
 	}
 
-	return `${getCacheKeyPrefix()}-${process.platform}-${hasher.digest('hex')}`;
+	return `${getCacheKeyPrefix()}-${process.platform}-${process.arch}-${hasher.digest('hex')}`;
 }
 
 export async function installBin(bin: string) {
