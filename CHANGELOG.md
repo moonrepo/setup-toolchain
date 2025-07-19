@@ -1,3 +1,8 @@
+# 0.5.0
+
+- Support proto v0.51 changes and `.protolock` files.
+- Updated dependencies.
+
 # 0.4.1
 
 - Include the architecture in the cache key.

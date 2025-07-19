@@ -93,19 +93,24 @@ export function extractMajorMinor(version: string) {
 }
 
 export function getCacheKeyPrefix() {
-	// v1 - Before proto v0.24 changes
-	return 'moonrepo-toolchain-v2';
+	// v2 - Before proto v0.24 changes
+	// v3 - proto v0.51 lockfile changes
+	return 'moonrepo-toolchain-v3';
 }
 
 export async function getToolchainCacheKey() {
 	const hasher = crypto.createHash('sha1');
-	const files = ['.prototools'];
+	const files = ['.prototools', '.protolock'];
 
 	if (isUsingMoon()) {
 		const root = core.getInput('workspace-root');
 
 		if (root) {
-			files.push(path.join(root, '.prototools'), path.join(root, '.moon/toolchain.yml'));
+			files.push(
+				path.join(root, '.prototools'),
+				path.join(root, '.protolock'),
+				path.join(root, '.moon/toolchain.yml'),
+			);
 		} else {
 			files.push('.moon/toolchain.yml');
 		}
