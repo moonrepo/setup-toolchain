@@ -93,19 +93,24 @@ export function extractMajorMinor(version: string) {
 }
 
 export function getCacheKeyPrefix() {
-	// v1 - Before proto v0.24 changes
-	return 'moonrepo-toolchain-v2';
+	// v2 - Before proto v0.24 changes
+	// v3 - proto v0.51 lockfile changes
+	return 'moonrepo-toolchain-v3';
 }
 
 export async function getToolchainCacheKey() {
 	const hasher = crypto.createHash('sha1');
-	const files = ['.prototools'];
+	const files = ['.prototools', '.protolock'];
 
 	if (isUsingMoon()) {
 		const root = core.getInput('workspace-root');
 
 		if (root) {
-			files.push(path.join(root, '.prototools'), path.join(root, '.moon/toolchain.yml'));
+			files.push(
+				path.join(root, '.prototools'),
+				path.join(root, '.protolock'),
+				path.join(root, '.moon/toolchain.yml'),
+			);
 		} else {
 			files.push('.moon/toolchain.yml');
 		}
@@ -115,7 +120,7 @@ export async function getToolchainCacheKey() {
 
 	hasher.update(await glob.hashFiles(files.join('\n')));
 
-	const protoVersion = process.env.PROTO_CLI_VERSION;
+	const protoVersion = process.env.PROTO_CLI_VERSION ?? core.getState('PROTO_CLI_VERSION');
 
 	if (protoVersion) {
 		core.debug(`Hashing proto version: ${protoVersion}`);
@@ -123,7 +128,7 @@ export async function getToolchainCacheKey() {
 		hasher.update(extractMajorMinor(protoVersion));
 	}
 
-	const moonVersion = process.env.MOON_CLI_VERSION;
+	const moonVersion = process.env.MOON_CLI_VERSION ?? core.getState('MOON_CLI_VERSION');
 
 	if (moonVersion) {
 		core.debug(`Hashing moon version: ${moonVersion}`);
@@ -185,8 +190,11 @@ export async function installBin(bin: string) {
 		const result = await execa(binPath, ['--version'], { stdio: 'pipe' });
 
 		if (result.stdout) {
+			const v = result.stdout.replace(bin, '').trim();
+
 			// eslint-disable-next-line require-atomic-updates
-			process.env[`${envPrefix}_CLI_VERSION`] = result.stdout.replace(bin, '').trim();
+			process.env[`${envPrefix}_CLI_VERSION`] = v;
+			core.saveState(`${envPrefix}_CLI_VERSION`, v);
 
 			core.info(result.stdout);
 		}

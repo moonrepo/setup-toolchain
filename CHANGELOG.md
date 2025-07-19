@@ -1,3 +1,9 @@
+# 0.5.0
+
+- Support proto v0.51 changes and `.protolock` files.
+- Fixed the proto/moon versions not being available in the post-run cache key.
+- Updated dependencies.
+
 # 0.4.1
 
 - Include the architecture in the cache key.
