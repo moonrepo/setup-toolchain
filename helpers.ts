@@ -120,7 +120,7 @@ export async function getToolchainCacheKey() {
 
 	hasher.update(await glob.hashFiles(files.join('\n')));
 
-	const protoVersion = process.env.PROTO_CLI_VERSION;
+	const protoVersion = process.env.PROTO_CLI_VERSION ?? core.getState('PROTO_CLI_VERSION');
 
 	if (protoVersion) {
 		core.debug(`Hashing proto version: ${protoVersion}`);
@@ -128,7 +128,7 @@ export async function getToolchainCacheKey() {
 		hasher.update(extractMajorMinor(protoVersion));
 	}
 
-	const moonVersion = process.env.MOON_CLI_VERSION;
+	const moonVersion = process.env.MOON_CLI_VERSION ?? core.getState('MOON_CLI_VERSION');
 
 	if (moonVersion) {
 		core.debug(`Hashing moon version: ${moonVersion}`);
@@ -190,8 +190,11 @@ export async function installBin(bin: string) {
 		const result = await execa(binPath, ['--version'], { stdio: 'pipe' });
 
 		if (result.stdout) {
+			const v = result.stdout.replace(bin, '').trim();
+
 			// eslint-disable-next-line require-atomic-updates
-			process.env[`${envPrefix}_CLI_VERSION`] = result.stdout.replace(bin, '').trim();
+			process.env[`${envPrefix}_CLI_VERSION`] = v;
+			core.saveState(`${envPrefix}_CLI_VERSION`, v);
 
 			core.info(result.stdout);
 		}
