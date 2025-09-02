@@ -35,7 +35,9 @@ jobs:
 - `cache-base` - Base branch/ref to save a warmup cache on. Other branches/refs will restore from
   this base.
 - `cache-version` - Version of the cache. Can be used to invalidate keys.
-- `moon-version` - Version of moon to explicitly install.
-- `proto-version` - Version of proto to explicitly install.
+- `moon-version` - Version of moon to explicitly install. Version will be extracted from
+  `.prototools`.
+- `proto-version` - Version of proto to explicitly install. Version will be extracted from
+  `.moon/toolchain.yml`.
 - `workspace-root` - Relative path to moon's workspace root if initialized in a sub-directory.
   Defaults to "".

@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import execa from 'execa';
+import yaml from 'yaml';
 import * as cache from '@actions/cache';
 import * as core from '@actions/core';
 import * as glob from '@actions/glob';
@@ -147,10 +148,42 @@ export async function getToolchainCacheKey() {
 	return `${getCacheKeyPrefix()}-${process.platform}-${process.arch}-${hasher.digest('hex')}`;
 }
 
+function getProtoVersion(): string {
+	const version = core.getInput('proto-version');
+
+	if (version) {
+		return version;
+	}
+
+	if (isUsingMoon()) {
+		const toolchainPath = path.join(getWorkspaceRoot(), '.moon/toolchain.yml');
+
+		if (fs.existsSync(toolchainPath)) {
+			const toolchain = yaml.parse(fs.readFileSync(toolchainPath, 'utf8')) as {
+				proto?: { version?: string };
+			};
+			const protoVersion = toolchain.proto?.version;
+
+			// Only fully-qualified is allowed
+			if (protoVersion && typeof protoVersion === 'string' && protoVersion.split('.').length >= 3) {
+				return protoVersion;
+			}
+		}
+	}
+
+	return 'latest';
+}
+
+function getMoonVersion(): string {
+	return core.getInput('moon-version') || 'latest';
+}
+
 export async function installBin(bin: string) {
 	core.info(`Installing \`${bin}\` globally`);
 
-	const version = core.getInput(`${bin}-version`) || 'latest';
+	const version =
+		// eslint-disable-next-line no-nested-ternary
+		bin === 'proto' ? getProtoVersion() : bin === 'moon' ? getMoonVersion() : 'latest';
 
 	const scriptName = WINDOWS ? `${bin}.ps1` : `${bin}.sh`;
 	const scriptPath = path.join(getProtoHome(), 'temp', scriptName);
