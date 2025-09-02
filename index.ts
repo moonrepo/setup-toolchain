@@ -61,9 +61,15 @@ async function run() {
 		await restoreCache();
 
 		if (core.getBooleanInput('auto-install')) {
-			core.info('Auto-installing tools');
+			core.info('Installing proto tools');
 
-			await execa('proto', ['use'], { cwd: getWorkspaceRoot(), stdio: 'inherit' });
+			await execa('proto', ['install'], { cwd: getWorkspaceRoot(), stdio: 'inherit' });
+		}
+
+		if (isUsingMoon() && core.getBooleanInput('auto-setup')) {
+			core.info('Setting up moon toolchains');
+
+			await execa('moon', ['setup'], { cwd: getWorkspaceRoot(), stdio: 'inherit' });
 		}
 	} catch (error: unknown) {
 		core.setFailed(error as Error);

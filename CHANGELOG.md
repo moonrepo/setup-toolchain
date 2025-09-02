@@ -1,3 +1,7 @@
+# 0.6.0
+
+- Added a `auto-setup` input that will automatically setup moon toolchains by running `moon setup`.
+
 # 0.5.0
 
 - Support proto v0.51 changes and `.protolock` files.

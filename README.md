@@ -29,7 +29,8 @@ jobs:
 
 ## Inputs
 
-- `auto-install` - Auto-install tools from the root `.prototools` on setup. Defaults to `false`.
+- `auto-install` - Auto-install proto tools by running `proto install`. Defaults to `false`.
+- `auto-setup` - Auto-setup moon toolchains by running `moon setup`. Defaults to `false`.
 - `cache` - Toggle caching of the toolchain directory. Defaults to `true`.
 - `cache-base` - Base branch/ref to save a warmup cache on. Other branches/refs will restore from
   this base.
