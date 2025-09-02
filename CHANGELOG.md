@@ -1,3 +1,8 @@
+# 0.6.0
+
+- Added a `auto-setup` input that will automatically setup moon toolchains by running `moon setup`.
+- Updated proto version detection to extract the `proto.version` field from `.moon/toolchain.yml`.
+
 # 0.5.0
 
 - Support proto v0.51 changes and `.protolock` files.

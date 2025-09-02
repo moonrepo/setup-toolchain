@@ -4,7 +4,10 @@ description: 'Installs proto and moon globally when required, and caches the too
 inputs:
   auto-install:
     default: 'false'
-    description: 'Auto-install tools on setup.'
+    description: 'Auto-install proto tools using `proto install`.'
+  auto-setup:
+    default: 'false'
+    description: 'Auto-setup moon toolchains using `moon setup`.'
   cache:
     description: 'Toggle caching of the toolchain directory.'
     default: 'true'
