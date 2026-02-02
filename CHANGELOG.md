@@ -1,3 +1,7 @@
+# 0.6.1
+
+- Updated dependencies.
+
 # 0.6.0
 
 - Added a `auto-setup` input that will automatically setup moon toolchains by running `moon setup`.
