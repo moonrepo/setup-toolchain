@@ -148,7 +148,7 @@ export async function getToolchainCacheKey() {
 	return `${getCacheKeyPrefix()}-${process.platform}-${process.arch}-${hasher.digest('hex')}`;
 }
 
-function getProtoVersion(): string {
+export function getProtoVersion(): string {
 	const version = core.getInput('proto-version');
 
 	if (version) {
@@ -174,7 +174,7 @@ function getProtoVersion(): string {
 	return 'latest';
 }
 
-function getMoonVersion(): string {
+export function getMoonVersion(): string {
 	return core.getInput('moon-version') || 'latest';
 }
 
@@ -195,7 +195,7 @@ export async function installBin(bin: string) {
 
 	core.info('Downloading installation script');
 
-	const script = await tc.downloadTool(`https://moonrepo.dev/install/${scriptName}`, scriptPath);
+	const script = await tc.downloadTool(`https://raw.githubusercontent.com/moonrepo/moon/refs/heads/master/website/static/install/${scriptName}`, scriptPath);
 
 	// eslint-disable-next-line no-magic-numbers
 	await fs.promises.chmod(script, 0o755);
