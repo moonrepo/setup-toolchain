@@ -1,6 +1,7 @@
 # 0.6.1
 
 - Fixed an issue with proto v0.55 installs.
+- Updated to use githubusercontent.com instead of moonrepo.dev for script downloads.
 - Updated dependencies.
 
 # 0.6.0

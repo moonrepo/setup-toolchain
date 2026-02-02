@@ -195,7 +195,7 @@ export async function installBin(bin: string) {
 
 	core.info('Downloading installation script');
 
-	const script = await tc.downloadTool(`https://moonrepo.dev/install/${scriptName}`, scriptPath);
+	const script = await tc.downloadTool(`https://raw.githubusercontent.com/moonrepo/moon/refs/heads/master/website/static/install/${scriptName}`, scriptPath);
 
 	// eslint-disable-next-line no-magic-numbers
 	await fs.promises.chmod(script, 0o755);
