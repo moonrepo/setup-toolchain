@@ -148,7 +148,7 @@ export async function getToolchainCacheKey() {
 	return `${getCacheKeyPrefix()}-${process.platform}-${process.arch}-${hasher.digest('hex')}`;
 }
 
-function getProtoVersion(): string {
+export function getProtoVersion(): string {
 	const version = core.getInput('proto-version');
 
 	if (version) {
@@ -174,7 +174,7 @@ function getProtoVersion(): string {
 	return 'latest';
 }
 
-function getMoonVersion(): string {
+export function getMoonVersion(): string {
 	return core.getInput('moon-version') || 'latest';
 }
 

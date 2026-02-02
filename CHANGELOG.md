@@ -1,5 +1,6 @@
 # 0.6.1
 
+- Fixed an issue with proto v0.55 installs.
 - Updated dependencies.
 
 # 0.6.0

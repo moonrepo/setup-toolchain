@@ -5,6 +5,7 @@ import {
 	getBinDir,
 	getCacheKeyPrefix,
 	getPluginsDir,
+	getProtoVersion,
 	getShimsDir,
 	getToolchainCacheKey,
 	getToolsDir,
@@ -64,6 +65,13 @@ async function run() {
 			core.info('Installing proto tools');
 
 			await execa('proto', ['install'], { cwd: getWorkspaceRoot(), stdio: 'inherit' });
+
+			// Temporary fix for a bug in v0.55!
+			const version = getProtoVersion();
+
+			if (version === 'latest' || version.startsWith('0.55')) {
+				await execa('proto', ['regen', '--bin'], { cwd: getWorkspaceRoot(), stdio: 'inherit' });
+			}
 		}
 
 		if (isUsingMoon() && core.getBooleanInput('auto-setup')) {
