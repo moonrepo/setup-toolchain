@@ -1,3 +1,7 @@
+# 0.6.2
+
+- Revert proto v0.55 compatibility.
+
 # 0.6.1
 
 - Fixed an issue with proto v0.55 installs.
