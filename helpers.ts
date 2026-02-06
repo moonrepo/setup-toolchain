@@ -23,6 +23,14 @@ export function getProtoHome() {
 	return path.join(os.homedir(), '.proto');
 }
 
+export function getMoonHome() {
+	return path.join(os.homedir(), '.moon');
+}
+
+export function getMoonBinDir() {
+	return path.join(getMoonHome(), 'bin');
+}
+
 export function getBinDir() {
 	return path.join(getProtoHome(), 'bin');
 }
@@ -178,6 +186,15 @@ export function getMoonVersion(): string {
 	return core.getInput('moon-version') || 'latest';
 }
 
+function getMoonIsV2OrHigher(): boolean {
+	return parseInt(getMoonVersion().split('.')[0], 10) > 1
+}
+
+function getCorrectBinDir(bin: string): string {
+	const useMoonBinDir = bin === 'moon' && getMoonIsV2OrHigher();
+	return useMoonBinDir ? getMoonBinDir() : getBinDir();
+}
+
 export async function installBin(bin: string) {
 	core.info(`Installing \`${bin}\` globally`);
 
@@ -204,7 +221,8 @@ export async function installBin(bin: string) {
 
 	core.info('Executing installation script');
 
-	const binDir = getBinDir();
+	const binDir = getCorrectBinDir(bin);
+	
 	const binPath = path.join(binDir, WINDOWS ? `${bin}.exe` : bin);
 	const envPrefix = bin.toUpperCase();
 
