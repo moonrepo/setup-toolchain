@@ -187,7 +187,12 @@ function getMoonVersion(): string {
 }
 
 function getMoonIsV2OrHigher(): boolean {
-	return parseInt(getMoonVersion().split('.')[0]) > 1
+	return parseInt(getMoonVersion().split('.')[0], 10) > 1
+}
+
+function getCorrectBinDir(bin: string): string {
+	const useMoonBinDir = bin === 'moon' && getMoonIsV2OrHigher();
+	return useMoonBinDir ? getMoonBinDir() : getBinDir();
 }
 
 export async function installBin(bin: string) {
@@ -216,8 +221,7 @@ export async function installBin(bin: string) {
 
 	core.info('Executing installation script');
 
-	const useMoonBinDir = bin === 'moon' && getMoonIsV2OrHigher();
-	const binDir = useMoonBinDir ? getMoonBinDir() : getBinDir() ;
+	const binDir = getCorrectBinDir(bin);
 	
 	const binPath = path.join(binDir, WINDOWS ? `${bin}.exe` : bin);
 	const envPrefix = bin.toUpperCase();
