@@ -1,3 +1,7 @@
+# 0.6.3
+
+- Added moon v2 configuration support.
+
 # 0.6.2
 
 - Revert proto v0.55 compatibility.
