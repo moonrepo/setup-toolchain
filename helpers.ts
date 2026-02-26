@@ -56,7 +56,11 @@ export function isCacheEnabled() {
 }
 
 export function isUsingMoon() {
-	return !!core.getInput('moon-version') || fs.existsSync(path.join(getWorkspaceRoot(), '.moon'));
+	return (
+		!!core.getInput('moon-version') ||
+		fs.existsSync(path.join(getWorkspaceRoot(), '.moon')) ||
+		fs.existsSync(path.join(getWorkspaceRoot(), '.config', 'moon'))
+	);
 }
 
 export function shouldInstallMoon() {
@@ -106,14 +110,22 @@ export async function getToolchainCacheKey() {
 	if (isUsingMoon()) {
 		const root = core.getInput('workspace-root');
 
+		files.push(
+			// v1
+			'.moon/toolchain.yml',
+			// v2
+			'.moon/toolchains.yml',
+			'.config/moon/toolchains.yml',
+		);
+
 		if (root) {
-			files.push(
-				path.join(root, '.prototools'),
-				path.join(root, '.protolock'),
-				path.join(root, '.moon/toolchain.yml'),
-			);
-		} else {
-			files.push('.moon/toolchain.yml');
+			const moreFiles: string[] = [];
+
+			for (const file of files) {
+				moreFiles.push(path.join(root, file));
+			}
+
+			files.push(...moreFiles);
 		}
 	}
 
@@ -156,17 +168,27 @@ export function getProtoVersion(): string {
 	}
 
 	if (isUsingMoon()) {
-		const toolchainPath = path.join(getWorkspaceRoot(), '.moon/toolchain.yml');
+		for (const file of [
+			'.moon/toolchain.yml',
+			'.moon/toolchains.yml',
+			'.config/moon/toolchains.yml',
+		]) {
+			const toolchainPath = path.join(getWorkspaceRoot(), file);
 
-		if (fs.existsSync(toolchainPath)) {
-			const toolchain = yaml.parse(fs.readFileSync(toolchainPath, 'utf8')) as {
-				proto?: { version?: string };
-			};
-			const protoVersion = toolchain.proto?.version;
+			if (fs.existsSync(toolchainPath)) {
+				const toolchain = yaml.parse(fs.readFileSync(toolchainPath, 'utf8')) as {
+					proto?: { version?: string };
+				};
+				const protoVersion = toolchain?.proto?.version;
 
-			// Only fully-qualified is allowed
-			if (protoVersion && typeof protoVersion === 'string' && protoVersion.split('.').length >= 3) {
-				return protoVersion;
+				// Only fully-qualified is allowed
+				if (
+					protoVersion &&
+					typeof protoVersion === 'string' &&
+					protoVersion.split('.').length >= 3
+				) {
+					return protoVersion;
+				}
 			}
 		}
 	}
@@ -195,7 +217,10 @@ export async function installBin(bin: string) {
 
 	core.info('Downloading installation script');
 
-	const script = await tc.downloadTool(`https://raw.githubusercontent.com/moonrepo/moon/refs/heads/master/website/static/install/${scriptName}`, scriptPath);
+	const script = await tc.downloadTool(
+		`https://raw.githubusercontent.com/moonrepo/moon/refs/heads/master/website/static/install/${scriptName}`,
+		scriptPath,
+	);
 
 	// eslint-disable-next-line no-magic-numbers
 	await fs.promises.chmod(script, 0o755);
