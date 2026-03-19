@@ -1,3 +1,7 @@
+# 0.6.4
+
+- Updated action to Node.js v24.
+
 # 0.6.3
 
 - Added moon v2 configuration support.
