@@ -2,6 +2,12 @@ name: 'Setup proto and moon toolchains'
 author: 'Miles Johnson'
 description: 'Installs proto and moon globally when required, and caches the toolchain.'
 inputs:
+  github-token:
+    default: ${{ github.token }}
+    description:
+      'GitHub token passed to the installer scripts as `GITHUB_TOKEN`, for authenticated release
+      downloads.'
+    required: false
   auto-install:
     default: 'false'
     description: 'Auto-install proto tools using `proto install`.'

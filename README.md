@@ -29,6 +29,8 @@ jobs:
 
 ## Inputs
 
+- `github-token` - Token passed to the installer scripts as `GITHUB_TOKEN`, so release downloads are
+  authenticated and avoid unauthenticated rate limits. Defaults to `${{ github.token }}`.
 - `auto-install` - Auto-install proto tools by running `proto install`. Defaults to `false`.
 - `auto-setup` - Auto-setup moon toolchains by running `moon setup`. Defaults to `false`.
 - `cache` - Toggle caching of the toolchain directory. Defaults to `true`.

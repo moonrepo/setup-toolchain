@@ -200,6 +200,18 @@ export function getMoonVersion(): string {
 	return core.getInput('moon-version') || 'latest';
 }
 
+function getInstallerEnv(envPrefix: string, binDir: string): Record<string, string> {
+	const env: Record<string, string> = { [`${envPrefix}_INSTALL_DIR`]: binDir };
+	const token = core.getInput('github-token');
+
+	// The installer downloads through the GitHub API when a token is set
+	if (token) {
+		env.GITHUB_TOKEN = token;
+	}
+
+	return env;
+}
+
 export async function installBin(bin: string) {
 	core.info(`Installing \`${bin}\` globally`);
 
@@ -234,9 +246,7 @@ export async function installBin(bin: string) {
 	const envPrefix = bin.toUpperCase();
 
 	await execa(script, version === 'latest' ? [] : [version], {
-		env: {
-			[`${envPrefix}_INSTALL_DIR`]: binDir,
-		},
+		env: getInstallerEnv(envPrefix, binDir),
 		stdio: core.isDebug() || !!process.env[`${envPrefix}_DEBUG`] ? 'inherit' : 'pipe',
 	});
 
