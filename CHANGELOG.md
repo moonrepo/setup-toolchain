@@ -1,3 +1,8 @@
+# Unreleased
+
+- Added a `github-token` input, passed to the installer scripts as `GITHUB_TOKEN` for authenticated
+  release downloads.
+
 # 0.6.4
 
 - Updated action to Node.js v24.
